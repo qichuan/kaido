@@ -1,0 +1,16 @@
+{
+  "name": "kaido-app",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "yarn run start:development",
+    "start:production": "yarn run -s serve",
+    "start:development": "yarn run -s dev",
+    "build": "cross-env NODE_ENV=production preact build",
+    "serve": "cross-env NODE_ENV=production preact build && preact serve",
+    "dev": "preact watch"
+  },
+
+  "dependencies": {
+    "kaido-core": "0.1.0"
+  }
+}
