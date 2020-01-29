@@ -7,9 +7,9 @@
     "start": "yarn run start:development",
     "start:production": "yarn run -s serve",
     "start:development": "yarn run -s dev",
-    "build": "cross-env NODE_ENV=production preact build --dest ../build && cp ../manifest.webapp ../build",
-    "serve": "cross-env NODE_ENV=production preact build --dest ../build && preact serve",
-    "dev": "preact watch --https"
+    "build": "cross-env NODE_ENV=production preact build --no-prerender --dest ../build && cp ../manifest.webapp ../build",
+    "serve": "cross-env NODE_ENV=production preact build --no-prerender --dest ../build && preact serve",
+    "dev": "preact watch"
   },
   "workspaces": {
     "nohoist": [
@@ -28,6 +28,7 @@
     "preact-jsx-chai": "^3.0.0",
     "preact-markup": "^2.0.0",
     "preact-render-to-string": "^5.0.6",
-    "preact-router": "^3.0.1"
+    "preact-router": "^3.0.1",
+    "theme-ui": "^0.3.1"
   }
 }

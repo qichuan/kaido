@@ -1,6 +1,5 @@
 import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
-import * as style from "./style.css"
 
 const Profile: preact.FunctionalComponent<{ user: string }> = ({ user }) => {
   const [time, setTime] = useState<number>(Date.now())
@@ -22,7 +21,7 @@ const Profile: preact.FunctionalComponent<{ user: string }> = ({ user }) => {
   }
 
   return (
-    <div className={style.profile}>
+    <div>
       <h1>Profile: {user}</h1>
       <p>This is the user profile for a user named {user}.</p>
 

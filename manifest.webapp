@@ -12,10 +12,21 @@
         "24": "/assets/icons/icon-24.png"
     },
     "developer": {
-        "name": "Garrett Downs",
-        "url": "https://garrettdowns.com"
+        "name": "Liki Du",
+        "url": "https://liya.design"
     },
     "type": "privileged",
+    "origin": "app://kaido.liya.design",
+    "redirects": [
+        {
+            "from": "https://login.microsoftonline.com/common/oauth2/nativeclient",
+            "to": "/index.html"
+        },
+        {
+            "from": "https://login.microsoftonline.com/common/oauth2/v2.0/logoutsession",
+            "to": "/index.html"
+        }
+    ],
     "permissions": {
         "audio-channel-content": {
             "description": "Required to play audio in the background."
@@ -26,19 +37,11 @@
         "desktop-notification": {
             "description": "Required to display episode information and playback controls in the notification panel."
         },
-        "device-storage:music": {
-            "access": "readwrite",
-            "description": "Required to read and write podcasts episodes."
-        },
-        "device-storage:videos": {
-            "access": "readwrite",
-            "description": "Required to read and write podcasts episodes."
-        },
         "device-storage:sdcard": {
             "access": "readwrite",
             "description": "Required to read and write podcasts episodes to external storage."
         }
     },
     "default_locale": "en",
-    "cursor": true
+    "cursor": false
 }

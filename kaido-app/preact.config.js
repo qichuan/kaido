@@ -1,4 +1,4 @@
-import path, { resolve } from "path";
+import { resolve } from "path";
 
 export default function(config, env, helpers) {
   // Switch css-loader for typings-for-css-modules-loader, which is a wrapper
@@ -19,6 +19,10 @@ export default function(config, env, helpers) {
     `src`,
     `index`
   );
+
+  if (env.isProd) {
+    config.devtool = false; // disable sourcemaps
+  }
 
   return config;
 }
