@@ -9,7 +9,8 @@
     "start:development": "yarn run -s dev",
     "build": "cross-env NODE_ENV=production preact build --no-prerender --dest ../build && cp ../manifest.webapp ../build",
     "serve": "cross-env NODE_ENV=production preact build --no-prerender --dest ../build && preact serve",
-    "dev": "preact watch"
+    "dev": "preact watch",
+    "postinstall": "patch-package"
   },
   "workspaces": {
     "nohoist": [
