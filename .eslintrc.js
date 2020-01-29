@@ -1,5 +1,5 @@
 module.exports = {
-  parser: '@typescript-eslint/parser', // Specifies the ESLint parser
+  parser: "@typescript-eslint/parser", // Specifies the ESLint parser
   extends: [
     "airbnb",
     "plugin:@typescript-eslint/recommended",
@@ -10,25 +10,25 @@ module.exports = {
   plugins: ["@typescript-eslint", "prettier"],
   parserOptions: {
     ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
+    sourceType: "module", // Allows for the use of imports
     ecmaFeatures: {
-      jsx: true,
+      jsx: true
     },
-    project: './tsconfig.json'
+    project: "./tsconfig.json"
   },
   env: {
     browser: true,
     jest: true,
-    node: true,
+    node: true
   },
   settings: {
     react: {
-      pragma: 'h'
+      pragma: "h"
     }
   },
   globals: {
     cy: true,
-    Cypress: true,
+    Cypress: true
   },
   rules: {
     "@typescript-eslint/no-unused-vars": [
@@ -41,13 +41,19 @@ module.exports = {
     "no-param-reassign": [
       2,
       {
-        "props": false
+        props: false
       }
     ],
     "no-unused-expressions": [
       1,
       {
-        "allowTaggedTemplates": true
+        allowTaggedTemplates: true
+      }
+    ],
+    "no-underscore-dangle": [
+      0,
+      {
+        allowAfterThis: true
       }
     ],
     "@typescript-eslint/prefer-interface": 0,
@@ -62,7 +68,7 @@ module.exports = {
     "no-use-before-define": 0,
     "linebreak-style": 0,
     "consistent-return": 0,
-    "import": 0,
+    import: 0,
     "func-names": 0,
     "import/no-extraneous-dependencies": 0,
     "import/prefer-default-export": 0,
@@ -80,14 +86,14 @@ module.exports = {
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [".js", ".jsx", ".tsx"]
+        extensions: [".js", ".jsx", ".tsx"]
       }
     ],
     quotes: [
       2,
       "backtick",
       {
-        "avoidEscape": true
+        avoidEscape: true
       }
     ],
     indent: ["error", 2, { SwitchCase: 1 }],
@@ -104,8 +110,8 @@ module.exports = {
     "jsx-a11y/anchor-is-valid": [
       "warn",
       {
-        "aspects": ["invalidHref"]
+        aspects: ["invalidHref"]
       }
     ]
   }
-}
+};
