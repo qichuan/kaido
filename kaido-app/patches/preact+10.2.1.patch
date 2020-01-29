@@ -1,0 +1,13 @@
+diff --git a/node_modules/preact/src/index.d.ts b/node_modules/preact/src/index.d.ts
+index 7aab693..82ec41c 100644
+--- a/node_modules/preact/src/index.d.ts
++++ b/node_modules/preact/src/index.d.ts
+@@ -14,7 +14,7 @@ declare namespace preact {
+ 		type: ComponentType<P> | string;
+ 		props: P & { children: ComponentChildren };
+ 		key: Key;
+-		ref: Ref<any> | null;
++		ref?: Ref<any> | null;
+ 		/**
+ 		 * The time this `vnode` started rendering. Will only be set when
+ 		 * the devtools are attached.
