@@ -16,7 +16,7 @@ export const Config = {
     storeAuthStateInCookie: true,
   },
   graph: {
-    url: ``,
+    url: `https://graph.microsoft.com`,
     scopes: [`tasks.readwrite`],
     version: `beta`,
   },

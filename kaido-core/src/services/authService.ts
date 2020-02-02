@@ -1,4 +1,4 @@
-import { Configuration, UserAgentApplication, AuthResponse } from "msal"
+import { Configuration, UserAgentApplication } from "msal"
 
 import User from "../models/user"
 import { Config } from "../../config"
@@ -87,7 +87,7 @@ export class AuthService implements AuthServiceInterface {
   async getAccessTokenAsync(resource: string[]): Promise<AccessToken> {
     const response = await this.authInstance.acquireTokenSilent({
       scopes: resource,
-      redirectUri: `${window.location.origin}/assets/auth.html`,
+      // redirectUri: `${window.location.origin}/assets/auth.html`,
     })
     return { token: response.accessToken, expiresAt: response.expiresOn }
   }
