@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "license": "MIT",
   "dependencies": {
+    "@microsoft/microsoft-graph-client": "^2.0.0",
     "msal": "^1.2.1"
+  },
+  "devDependencies": {
+    "@microsoft/microsoft-graph-types": "^1.12.0"
   }
 }

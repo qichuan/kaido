@@ -1,16 +1,23 @@
-export const config = {
+const redirectAppEndpoint = `https://login.microsoftonline.com/common/oauth2/nativeclient`
+// const redirectAppEndpoint = `http://localhost:8081`
+const redirectUri: string = process.env.NODE_ENV === `production` ? redirectAppEndpoint : window.location.origin
+
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`)
+
+export const Config = {
   auth: {
     clientId: `e3427d2d-4873-4852-b627-d1721497ddea`,
     authority: ``,
-    defaultScopes: [`user.read`, `calendars.read`],
-    redirectUri: `https://login.microsoftonline.com/common/oauth2/nativeclient`,
-    // redirectUri: window.location.origin,
+    defaultScopes: [`user.read`, `calendars.read`, `tasks.readwrite`],
+    redirectUri,
   },
-  externalResources: {
-    graphApi: {
-      url: ``,
-      scope: [],
-      version: ``,
-    },
+  cache: {
+    cacheLocation: `localStorage`,
+    storeAuthStateInCookie: true,
+  },
+  graph: {
+    url: ``,
+    scopes: [`tasks.readwrite`],
+    version: `beta`,
   },
 }

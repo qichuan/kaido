@@ -1,27 +1,27 @@
-import { Configuration, UserAgentApplication } from "msal"
+import { Configuration, UserAgentApplication, AuthResponse } from "msal"
 
 import User from "../models/user"
-import { config } from "../../config"
+import { Config } from "../../config"
 import AuthError from "../utils/authError"
 
 const authConfig: Configuration = {
   auth: {
-    clientId: config.auth.clientId,
-    redirectUri: config.auth.redirectUri,
-    authority: config.auth.authority,
+    clientId: Config.auth.clientId,
+    redirectUri: Config.auth.redirectUri,
+    authority: Config.auth.authority,
   },
   // system: {
   //     logger: new Logger((lvl: any, message: any, piEnabled?: boolean ): void => { console.log('Auth: ', message);})
   // }
 }
 
-const defaultLoginScopes = config.auth.defaultScopes
+const defaultLoginScopes = Config.auth.defaultScopes
 
 export interface AuthServiceInterface {
   /**
    * Get the users concent to external application
    */
-  acquireConcent(resource: string): void
+  acquireConcent(resource: string[]): void
 
   /**
    * Redirects the user to authority for authentication
@@ -41,7 +41,7 @@ export interface AuthServiceInterface {
   /**
    * Returns the currently logged in users access token for a given resource
    */
-  getAccessTokenAsync(resource: string): Promise<AccessToken>
+  getAccessTokenAsync(resource: string[]): Promise<AccessToken>
 
   /**
    * Returns information on the currently logged in user, or null if not logged in
@@ -54,7 +54,7 @@ type AccessToken = {
   expiresAt: Date
 }
 
-export default class AuthService implements AuthServiceInterface {
+export class AuthService implements AuthServiceInterface {
   private authInstance: UserAgentApplication
 
   constructor() {
@@ -65,8 +65,8 @@ export default class AuthService implements AuthServiceInterface {
     this.authInstance.loginRedirect({ scopes: defaultLoginScopes })
   }
 
-  acquireConcent(resource: string): void {
-    this.authInstance.loginRedirect({ scopes: [resource] })
+  acquireConcent(resource: string[]): void {
+    this.authInstance.loginRedirect({ scopes: resource })
   }
 
   logout(): void {
@@ -84,8 +84,11 @@ export default class AuthService implements AuthServiceInterface {
     }
   }
 
-  async getAccessTokenAsync(resource: string): Promise<AccessToken> {
-    const response = await this.authInstance.acquireTokenSilent({ scopes: [resource] })
+  async getAccessTokenAsync(resource: string[]): Promise<AccessToken> {
+    const response = await this.authInstance.acquireTokenSilent({
+      scopes: resource,
+      redirectUri: `${window.location.origin}/assets/auth.html`,
+    })
     return { token: response.accessToken, expiresAt: response.expiresOn }
   }
 

@@ -1,9 +1,10 @@
 import { h } from "preact"
 
-import AppContext, { createAppContext } from "./contexts/appContext"
+import { AppContext, createAppContext } from "./contexts"
 
-import AuthService from "../../kaido-core/src/services/authService"
+import { AuthService } from "../../kaido-core/src/services"
 
+import "./theme/global.css"
 import App from "./components/app"
 
 const Root: preact.FunctionalComponent = () => {
@@ -15,11 +16,11 @@ const Root: preact.FunctionalComponent = () => {
   })
 
   return (
-    <AppContext.Provider value={context}>
-      <div id="app">
+    <div id="app">
+      <AppContext.Provider value={context}>
         <App />
-      </div>
-    </AppContext.Provider>
+      </AppContext.Provider>
+    </div>
   )
 }
 

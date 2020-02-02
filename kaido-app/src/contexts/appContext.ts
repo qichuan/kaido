@@ -10,8 +10,6 @@ type createContextOptions = {
   auth: AuthServiceInterface
 }
 
-const AppContext = createContext<AppContextProps>({} as AppContextProps)
+export const AppContext = createContext<AppContextProps>({} as AppContextProps)
 
 export const createAppContext = ({ auth }: createContextOptions): AppContextProps => ({ auth })
-
-export default AppContext

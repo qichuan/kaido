@@ -1,7 +1,11 @@
 import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 
-const Profile: preact.FunctionalComponent<{ user: string }> = ({ user }) => {
+type ProfileProps = {
+  user?: string
+}
+
+const Profile: preact.FunctionalComponent<ProfileProps> = ({ user }) => {
   const [time, setTime] = useState<number>(Date.now())
   const [count, setCount] = useState<number>(0)
 

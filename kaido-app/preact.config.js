@@ -20,7 +20,7 @@ export default function(config, env, helpers) {
     `index`
   );
 
-  if (env.isProd) {
+  if (env.production) {
     config.devtool = false; // disable sourcemaps
   }
 

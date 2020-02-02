@@ -1,11 +1,14 @@
 import { h } from "preact"
-import { Route, Router, RouterOnChangeArgs } from "preact-router"
+import { useContext, useReducer } from "preact/hooks"
 
-import { ThemeProvider } from "theme-ui"
+import { Box, Container, Flex, ThemeProvider } from "theme-ui"
 
-import Home from "../routes/home"
-import Profile from "../routes/profile"
+import { AppContext, UIComponentsContext, UIComponentsReducer } from "../contexts"
+import GeneralRoutes from "../routes/general"
+import Login from "../routes/login"
 import Header from "./header"
+import SoftKey from "./softkey"
+import KaiUI from "../theme/kaiui"
 
 if ((module as any).hot) {
   /* eslint-disable global-require */
@@ -13,26 +16,51 @@ if ((module as any).hot) {
   /* eslint-enable global-require */
 }
 
-const App: preact.FunctionalComponent = () => {
-  let currentUrl: string
-  const handleRoute = (e: RouterOnChangeArgs) => {
-    currentUrl = e.url
-  }
+const defaultTexts = {
+  softKeys: [``, ``, ``],
+  menus: [``, ``, ``],
+}
 
-  const theme = {
-    colors: {
-      text: `#000`,
-    },
-  }
+const App: preact.FunctionalComponent = () => {
+  const { auth } = useContext(AppContext)
+  const userIsLoggedIn = auth.getCurrentUser() != null
+
+  const [texts, dispatch] = useReducer(UIComponentsReducer, defaultTexts)
 
   return (
-    <ThemeProvider theme={theme}>
-      <Header />
-      <Router onChange={handleRoute}>
-        <Route path="/home" component={Home} default />
-        <Route path="/profile/" component={Profile} user="me" />
-        <Route path="/profile/:user" component={Profile} />
-      </Router>
+    <ThemeProvider theme={KaiUI}>
+      <UIComponentsContext.Provider value={{ texts, dispatch }}>
+        <Flex
+          id="layout"
+          sx={{
+            position: `absolute`,
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            flexDirection: `column`,
+            minHeight: `screenHeight`,
+          }}
+        >
+          <Container as="header">
+            <Header text="KaiDo" />
+          </Container>
+          <Container
+            as="main"
+            sx={{
+              position: `relative`,
+              overflowX: `hidden`,
+              overflowY: `auto`,
+              flex: `auto`,
+            }}
+          >
+            {userIsLoggedIn ? <GeneralRoutes /> : <Login />}
+          </Container>
+          <Container as="footer">
+            <SoftKey />
+          </Container>
+        </Flex>
+      </UIComponentsContext.Provider>
     </ThemeProvider>
   )
 }
