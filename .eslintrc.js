@@ -107,6 +107,7 @@ module.exports = {
       }
     ],
     "jsx-a11y/href-no-hash": "off",
+    "jsx-a11y/tabindex-no-positive": "off",
     "jsx-a11y/anchor-is-valid": [
       "warn",
       {

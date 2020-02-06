@@ -1,55 +1,52 @@
-/** @jsx jsx*/
 import { h } from "preact"
-import { useRef, useContext } from "preact/hooks"
-import { Box, jsx } from "theme-ui"
+import { useRef, useContext, useEffect } from "preact/hooks"
+import { Box, Text, Button as UIButton } from "theme-ui"
 
-import { UIComponentsContext } from "../contexts"
+import { AppContext } from "../contexts"
 import { useFocus } from "../hooks"
 
 type ButtonProps = {
   name: string
   text: string
   onClick: () => void
-  softKeyText?: string
 }
 
-const Button: preact.FunctionalComponent<ButtonProps> = ({
-  name,
-  text,
-  onClick,
-  softKeyText = `select`,
-}: ButtonProps) => {
-  const { dispatch } = useContext(UIComponentsContext)
+const Button: preact.FunctionalComponent<ButtonProps> = ({ name, text, onClick }: ButtonProps) => {
+  const { dispatch } = useContext(AppContext)
+  const forwardedRef = useRef<HTMLButtonElement | null>(null)
 
-  const handleFocusChange = (isNowFocused: boolean) => {
-    if (isNowFocused) {
+  const handleFocusChange = (isNowFocused: boolean) => undefined
+
+  // const isFocused = useFocus(forwardedRef, handleFocusChange, false)
+
+  useEffect(() => {
+    const selectedRef = forwardedRef.current!.getAttribute(`data-nav-selected`)
+
+    if (selectedRef && selectedRef === `true`) {
       dispatch({
         type: `SET_SOFTKEY_TEXTS`,
-        texts: {
+        layoutTexts: {
           softKeys: [``, `Select`, ``],
         },
       })
     }
-  }
-
-  const forwardedRef = useRef<HTMLButtonElement | null>(null)
-
-  // const isFocused = useFocus(forwardedRef, handleFocusChange, false)
+  }, [forwardedRef.current])
 
   return (
     <Box sx={{ m: 3 }}>
-      <button
-        type="button"
-        tabIndex={0}
+      <UIButton
         name={name}
         ref={forwardedRef}
         onClick={onClick}
         onFocus={() => handleFocusChange(true)}
         onBlur={() => handleFocusChange(false)}
-        sx={{ variant: `kaiui.buttons.primary` }}
+        data-nav-selectable
+        variant="kaiui.buttons.primary"
       >
-        <p sx={{ variant: `kaiui.p.btn` }}>{text}</p>
-      </button>
+        <Text as="p" variant="kaiui.p.btn">
+          {text}
+        </Text>
+      </UIButton>
     </Box>
   )
 }

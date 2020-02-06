@@ -1,30 +1,57 @@
-import { h } from "preact"
-import { useContext, useEffect, useState } from "preact/hooks"
+import { h, Fragment } from "preact"
+import { useContext, useEffect, useState, useRef } from "preact/hooks"
+import { route } from "preact-router"
 import { Container } from "theme-ui"
 
-import { AppContext, GraphContext, UIComponentsContext } from "../contexts"
+import { FolderInterface } from "../../../kaido-core/src/models/task"
+import { AppContext, GraphContext } from "../contexts"
 
 import { useNavKeys } from "../hooks/useNavKeys"
 import Menu from "../components/menu"
-import Button from "../components/button"
+import Item from "../components/item"
+import Separator from "../components/separator"
 
 const Folders: preact.FunctionalComponent = () => {
-  const { auth } = useContext(AppContext)
+  const { auth, layoutTexts, dispatch } = useContext(AppContext)
   const { graph } = useContext(GraphContext)
-  const { dispatch } = useContext(UIComponentsContext)
 
+  const { menus } = layoutTexts
   const [taskFolders, setTaskFolders] = useState<any | null>(null)
+  const [isMenuOpened, setMenuOpened] = useState(false)
+
+  const menuRef = useRef(null)
+  const mountRef = useRef(null)
+
+  const user = auth.getCurrentUser()
+  const fullname = user ? `${user.fullname}'s` : `My`
+
+  useNavKeys(
+    {
+      ArrowDown: () => undefined,
+      ArrowUp: () => undefined,
+      SoftLeft: () => setMenuOpened(false),
+      SoftRight: () => setMenuOpened(true),
+      Backspace: () => setMenuOpened(false),
+    },
+    { capture: true, stopPropagation: true, isMenuOpened }
+  )
 
   useEffect(() => {
     dispatch({
+      type: `SET_HEADER_TEXTS`,
+      layoutTexts: {
+        header: `${fullname} To Do Lists`,
+      },
+    })
+    dispatch({
       type: `SET_SOFTKEY_TEXTS`,
-      texts: {
+      layoutTexts: {
         softKeys: [`Add`, `Select`, `Options`],
       },
     })
     dispatch({
       type: `SET_MENU_TEXTS`,
-      texts: {
+      layoutTexts: {
         menus: [`Search`, `Settings`, `Sign out`],
       },
     })
@@ -38,29 +65,36 @@ const Folders: preact.FunctionalComponent = () => {
     })()
   }, [])
 
-  useNavKeys({
-    SoftRight: () => openMenu(),
-  })
-
-  const openMenu = (): boolean => true
-
-  const userIsLoggedIn = auth.getCurrentUser() != null
+  const handleMenuSelect = (id: string) => {
+    switch (id) {
+      case `search`:
+        break
+      case `settings`:
+        break
+      case `sign-out`:
+        auth.logout()
+        break
+      default:
+        break
+    }
+    setMenuOpened(false)
+  }
 
   return (
-    <Container>
-      <h2>My To Do Folders</h2>
-      <Button
-        text="Sign out"
-        name="signout"
-        onClick={() => {
-          auth.logout()
-        }}
-      />
-      <h4>User</h4>
-      <p style={{ wordBreak: `break-all` }}>{JSON.stringify(auth.getCurrentUser())}</p>
-      <h4>Task folders</h4>
-      <p style={{ wordBreak: `break-all` }}>{JSON.stringify(taskFolders)}</p>
-      <Menu open={openMenu()} />
+    <Container ref={mountRef}>
+      {taskFolders &&
+        taskFolders.map((folder: FolderInterface) => {
+          const item = <Item text={folder.name} onSelect={() => route(`/taskFolders/${folder.id}/tasks`)} />
+          return folder.isDefault ? (
+            <Fragment>
+              {item}
+              <Separator text="My Lists" />
+            </Fragment>
+          ) : (
+            item
+          )
+        })}
+      {isMenuOpened && <Menu menus={menus} ref={menuRef} onSelect={id => handleMenuSelect(id)} />}
     </Container>
   )
 }

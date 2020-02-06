@@ -22,6 +22,13 @@ const commonButtonStyles = {
   boxShadow: `none`,
 }
 
+const fullFillArea = {
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+}
+
 export const colors = {
   ...baseColors,
   text: baseColors.gray[5],
@@ -33,6 +40,7 @@ export const colors = {
   muted: baseColors.gray[1],
   gray20: baseColors.gray[2],
   gray40: baseColors.gray[3],
+  black: baseColors.black,
 }
 
 /**
@@ -46,12 +54,34 @@ export const sizes = {
   headerHeight: `2.8rem`,
   softKeyHeight: `3rem`,
   buttonHeight: `3.6rem`,
+  itemHeight: `6rem`,
+  menuItemHeight: `4.8rem`,
+  separatorHeight: `2rem`,
   screenHeight: `100vh`,
   screenWidth: `100vw`,
 }
 
 export const kaiui = {
+  h1: {
+    ...base.styles.h1,
+  },
+  h2: {
+    ...base.styles.h2,
+  },
+  h3: {
+    ...base.styles.h3,
+  },
+  h4: {
+    ...base.styles.h4,
+  },
+  h5: {
+    ...base.styles.h5,
+  },
   p: {
+    pri: {
+      fontSize: 5,
+      fontWeight: `body`,
+    },
     btn: {
       fontSize: 5,
       fontWeight: `body`,
@@ -76,26 +106,29 @@ export const kaiui = {
     bg: `gray20`,
     textTransform: `capitalize`,
     p: 2,
-    text: {
-      ...base.styles.h5,
+    h5: {
       width: `7.2rem`,
       overflow: `hidden`,
     },
   },
   menu: {
+    ...fullFillArea,
+    position: `fixed`,
+    mb: sizes.softKeyHeight,
     options: {
+      width: `full`,
       position: `absolute`,
       flexDirection: `column`,
+      bottom: 0,
       zIndex: 50,
+      bg: `background`,
     },
     overlay: {
-      position: `fixed`,
-      bg: `primary`,
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
+      ...fullFillArea,
+      position: `absolute`,
+      bg: `black`,
       zIndex: 40,
+      opacity: 0.8,
     },
   },
   buttons: {
@@ -108,12 +141,30 @@ export const kaiui = {
       height: `buttonHeight`,
       width: `full`,
       lineHeight: `inherit`,
+      color: `text`,
       bg: `gray20`,
-      "&:focus": {
+      "&[data-nav-selected='true']": {
         color: `textInvert`,
         bg: `primary`,
       },
     },
+  },
+  item: {
+    display: `flex`,
+    alignItems: `center`,
+    height: `itemHeight`,
+    bg: `background`,
+    p: 3,
+    "&[data-nav-selected='true']": {
+      color: `textInvert`,
+      bg: `primary`,
+    },
+  },
+  separator: {
+    alignItems: `center`,
+    height: `separatorHeight`,
+    bg: `gray20`,
+    p: 3,
   },
 }
 

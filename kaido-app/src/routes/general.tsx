@@ -9,6 +9,7 @@ import Folders from "./folders"
 import Profile from "./profile"
 
 import { AppContext, GraphContext } from "../contexts"
+import TaskList from "./taskList"
 
 const GeneralRoutes: preact.FunctionalComponent = () => {
   let currentUrl: string
@@ -42,7 +43,8 @@ const GeneralRoutes: preact.FunctionalComponent = () => {
   return (
     <GraphContext.Provider value={{ graph }}>
       <Router onChange={handleRoute}>
-        <Route path="/" component={Folders as any} default />
+        <Route path="/taskFolders" component={Folders as any} default />
+        <Route path="/taskFolders/:id/tasks" component={TaskList as any} />
         <Route path="/profile/" component={Profile as any} user="me" />
       </Router>
     </GraphContext.Provider>

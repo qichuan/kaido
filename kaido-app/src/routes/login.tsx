@@ -1,17 +1,21 @@
 import { h } from "preact"
-import { useContext } from "preact/hooks"
+import { useContext, useRef, useEffect } from "preact/hooks"
+import { Container } from "theme-ui"
 
 import { AppContext } from "../contexts"
-
 import Button from "../components/button"
+import { useNavKeys } from "../hooks"
 
 const Login: preact.FunctionalComponent = () => {
   const { auth } = useContext(AppContext)
 
-  const userIsLoggedIn = auth.getCurrentUser() != null
+  useNavKeys({
+    ArrowDown: () => undefined,
+    ArrowUp: () => undefined,
+  })
 
   return (
-    <div>
+    <Container>
       <Button
         text="Sign in"
         name="signin"
@@ -26,7 +30,8 @@ const Login: preact.FunctionalComponent = () => {
           auth.logout()
         }}
       />
-    </div>
+      <Button text="Hello" name="hello" onClick={() => undefined} />
+    </Container>
   )
 }
 

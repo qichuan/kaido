@@ -1,10 +1,12 @@
 import { h } from "preact"
-import { Box, Styled } from "theme-ui"
+import { Flex, Heading } from "theme-ui"
 
 const Separator: preact.FunctionalComponent<{ text: string }> = ({ text }) => (
-  <Box>
-    <Styled.h4>{text}</Styled.h4>
-  </Box>
+  <Flex variant="kaiui.separator">
+    <Heading as="h4" variant="kaiui.h4">
+      {text}
+    </Heading>
+  </Flex>
 )
 
 export default Separator

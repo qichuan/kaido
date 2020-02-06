@@ -1,6 +1,17 @@
 import { h } from "preact"
-import { Box } from "theme-ui"
+import { Container, Text } from "theme-ui"
 
-const Item: preact.FunctionalComponent = () => <Box>Item</Box>
+type ItemProps = {
+  text: string
+  onSelect: () => void
+}
+
+const Item: preact.FunctionalComponent<ItemProps> = ({ text, onSelect }) => (
+  <Container onClick={onSelect} data-nav-selectable variant="kaiui.item">
+    <Text as="p" variant="kaiui.p.pri">
+      {text}
+    </Text>
+  </Container>
+)
 
 export default Item
