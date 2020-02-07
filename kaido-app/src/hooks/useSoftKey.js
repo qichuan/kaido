@@ -1,0 +1,64 @@
+import { createContext } from "preact";
+import { useContext, useEffect } from "preact/hooks";
+
+export const SoftKeyContext = createContext();
+
+export const SoftKeyReducer = (state, action) => {
+  let stack, current;
+  switch (action.type) {
+    case "set":
+      return { ...state, current: { ...state.current, ...action.config } };
+    case "replace":
+      return { ...state, current: { ...action.config } };
+    case "push":
+      stack = state.stack || [];
+      current = state.current;
+      if (!current) {
+        current = { name: action.origin, counter: 1 };
+      } else if (current.name !== action.origin) {
+        stack.push(current);
+        current = { name: action.origin, counter: 1 };
+      } else {
+        current.counter++;
+      }
+      return { stack, current };
+    case "pop":
+      stack = state.stack || [];
+      current = state.current;
+      if (current.name !== action.origin) {
+        // This unusual order of events happens when navigating
+        // to a new section from the TOC. Commenting out this
+        // code doesn't seem to cause any issues.
+        // throw new Error(`Unexpected origin: ${action.origin}. Expected: ${current.name}`)
+      } else {
+        current.counter--;
+        if (current.counter === 0) {
+          current = stack.pop();
+        }
+      }
+      return { stack, current };
+    default:
+      return state;
+  }
+};
+
+export const useSoftkey = (
+  origin,
+  config = null,
+  dependencies = [],
+  replace = false
+) => {
+  const softkey = useContext(SoftKeyContext);
+  useEffect(() => {
+    softkey.dispatch({ type: `push`, origin });
+    return () => softkey.dispatch({ type: `pop`, origin });
+  }, [origin]);
+
+  useEffect(() => {
+    if (config) {
+      const type = replace ? `replace` : `set`;
+      softkey.dispatch({ type, config });
+    }
+  }, dependencies);
+  return softkey;
+};

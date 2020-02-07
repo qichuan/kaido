@@ -11,6 +11,7 @@ import Profile from "./profile"
 import { AppContext, GraphContext } from "../contexts"
 import TaskList from "./taskList"
 import Task from "./task"
+import Portfolio from "./portfolio"
 
 const GeneralRoutes: preact.FunctionalComponent = () => {
   let currentUrl: string

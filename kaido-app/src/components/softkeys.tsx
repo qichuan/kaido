@@ -1,0 +1,63 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import { h } from "preact"
+import { memo } from "preact/compat"
+import { useEffect, useRef } from "preact/hooks"
+
+const SoftkeyButton = memo(({ className, text, handler }) => (
+  <label className={className} onClick={handler}>
+    {text}
+  </label>
+))
+
+export const Softkey = ({
+  left,
+  center,
+  right,
+  onKeyLeft,
+  onKeyCenter,
+  onKeyRight,
+  onKeyArrowDown,
+  onKeyArrowUp,
+  onKeyArrowLeft,
+  onKeyArrowRight,
+  onKeyboard4,
+  onKeyboard5,
+  onKeyboard6,
+}) => {
+  const handlersRef = useRef()
+  handlersRef.current = {
+    SoftLeft: onKeyLeft,
+    Enter: onKeyCenter,
+    SoftRight: onKeyRight,
+    ArrowDown: onKeyArrowDown,
+    ArrowUp: onKeyArrowUp,
+    ArrowLeft: onKeyArrowLeft,
+    ArrowRight: onKeyArrowRight,
+    4: onKeyboard4,
+    5: onKeyboard5,
+    6: onKeyboard6,
+  }
+  const onKeyDown = e => {
+    const key = e.key.toString()
+    if (handlersRef.current[key]) {
+      handlersRef.current[key](e)
+      e.stopPropagation()
+      e.preventDefault()
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener(`keydown`, onKeyDown)
+    return () => document.removeEventListener(`keydown`, onKeyDown)
+  }, [])
+
+  return (
+    <div className="softkey">
+      <SoftkeyButton key="left" className="left" text={left} handler={onKeyLeft} />
+      <SoftkeyButton key="center" className="center" text={center} handler={onKeyCenter} />
+      <SoftkeyButton key="right" className="right" text={right} handler={onKeyRight} />
+    </div>
+  )
+}
