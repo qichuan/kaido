@@ -3,7 +3,7 @@ import { useContext, useEffect, useState, useRef } from "preact/hooks"
 import { route } from "preact-router"
 import { Container } from "theme-ui"
 
-import { FolderInterface } from "../../../kaido-core/src/models/task"
+import { FolderInterface } from "../../../kaido-core/src/models/folder"
 import { AppContext, GraphContext } from "../contexts"
 
 import { useNavKeys } from "../hooks/useNavKeys"
@@ -18,9 +18,6 @@ const Folders: preact.FunctionalComponent = () => {
   const { menus } = layoutTexts
   const [taskFolders, setTaskFolders] = useState<any | null>(null)
   const [isMenuOpened, setMenuOpened] = useState(false)
-
-  const menuRef = useRef(null)
-  const mountRef = useRef(null)
 
   const user = auth.getCurrentUser()
   const fullname = user ? `${user.fullname}'s` : `My`
@@ -81,10 +78,13 @@ const Folders: preact.FunctionalComponent = () => {
   }
 
   return (
-    <Container ref={mountRef}>
+    <Container>
+      <Item text="My Day" />
       {taskFolders &&
         taskFolders.map((folder: FolderInterface) => {
-          const item = <Item text={folder.name} onSelect={() => route(`/taskFolders/${folder.id}/tasks`)} />
+          const item = (
+            <Item text={folder.name} onSelect={() => route(`/taskFolders/${folder.name}/${folder.id}/tasks`)} />
+          )
           return folder.isDefault ? (
             <Fragment>
               {item}
@@ -94,7 +94,7 @@ const Folders: preact.FunctionalComponent = () => {
             item
           )
         })}
-      {isMenuOpened && <Menu menus={menus} ref={menuRef} onSelect={id => handleMenuSelect(id)} />}
+      {isMenuOpened && <Menu menus={menus} onSelect={id => handleMenuSelect(id)} />}
     </Container>
   )
 }

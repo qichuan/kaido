@@ -38,20 +38,13 @@ export const useNavKeys = (actions: { [key in NavKey]?: () => void }, options: O
     `Enter`,
   ]
 
-  type SelectedElement = {
-    type: string | null
-    index: number | null
-  }
+  const [current, setCurrent] = useState<number | null>(null)
+  console.log(`current: ${current}`)
 
-  const [current, setCurrent] = useState<SelectedElement>({ type: null, index: null })
-
-  const getAllElements = () => {
-    console.log(`getAllElements(isMenuOpened): ${options.isMenuOpened}`)
-
-    return options.isMenuOpened
+  const getAllElements = () =>
+    options.isMenuOpened
       ? document.getElementById(`menu`)!.querySelectorAll<HTMLElement>(`[${attributeSelectable}]`)
       : document.querySelectorAll<HTMLElement>(`[${attributeSelectable}]`)
-  }
 
   const getSelectedElementIndex = () => {
     const element = options.isMenuOpened
@@ -61,28 +54,21 @@ export const useNavKeys = (actions: { [key in NavKey]?: () => void }, options: O
   }
 
   const selectElement = (element: HTMLElement, setIndex = 0) => {
-    // console.log(`selectElement(element): ${element.childNodes}`)
-
     if (element) {
       ;[].forEach.call(getAllElements(), (el: HTMLElement, idx: number) => {
-        // if (isMenu) {
-        //   if (!document.getElementById(`menu`)!.contains(el)) return
-        // }
         const isEqual = el === element
         el.setAttribute(attributeIndex, `${idx}`)
         el.setAttribute(attributeSelected, `${isEqual}`)
         if (isEqual) el.focus()
         else el.blur()
       })
-      setCurrent({ type: element.tagName, index: setIndex })
+      if (!options.isMenuOpened) setCurrent(setIndex)
     } else {
       setNavigation(0)
     }
   }
 
-  const setNavigation = (index: number) => {
-    selectElement(getAllElements()[index] || document.body)
-  }
+  const setNavigation = (index: number) => selectElement(getAllElements()[index] || document.body)
 
   const parseKey = (ev: KeyboardEvent) => {
     // Simulate soft keys for testing purposes
@@ -108,6 +94,10 @@ export const useNavKeys = (actions: { [key in NavKey]?: () => void }, options: O
 
     const action = actions[key as NavKey]
 
+    if (!action) {
+      return
+    }
+
     if (key === `ArrowDown` || key === `ArrowUp`) {
       const allElements = getAllElements()
       const currentIndex = getSelectedElementIndex()
@@ -115,8 +105,6 @@ export const useNavKeys = (actions: { [key in NavKey]?: () => void }, options: O
       let setIndex: number
       switch (key) {
         case `ArrowDown`: {
-          console.log(`ArrowDown currentIndex # ${currentIndex}`)
-
           const isLastElement = currentIndex + 1 > allElements.length - 1
           setIndex = isLastElement ? 0 : currentIndex + 1
           selectElement(allElements[setIndex] || allElements[0], setIndex)
@@ -133,17 +121,14 @@ export const useNavKeys = (actions: { [key in NavKey]?: () => void }, options: O
       }
     }
 
-    if (!action) {
-      return
-    }
-
     action()
   }
 
   useEffect(() => {
     document.addEventListener(`keydown`, handleKeyPress, options.capture)
     // Set navigation from the first navigatable item
-    setNavigation(0)
+    const startFrom = current && !options.isMenuOpened ? current : 0
+    setNavigation(startFrom)
 
     return () => {
       document.removeEventListener(`keydown`, handleKeyPress, options.capture)

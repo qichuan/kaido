@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios"
 
 import { AuthServiceInterface } from "./authService"
-import { Folder } from "../models/task"
+import { Folder } from "../models/folder"
 import { Config } from "../../config"
 import TaskList from "../../../kaido-app/src/routes/taskList"
 
@@ -13,6 +13,7 @@ export interface GraphServiceInterface {
    * Returns the list of Outlook task folders
    */
   getTaskFoldersAsync(): Promise<any>
+  getTaskFolderListsAsync(id: string): Promise<any>
 }
 
 export class GraphService implements GraphServiceInterface {
@@ -53,7 +54,8 @@ export class GraphService implements GraphServiceInterface {
   async getTaskFolderListsAsync(id: string): Promise<any> {
     const endpoint = `/me/outlook/taskFolders/${id}/tasks`
     const response = await this.client.get(endpoint)
-    const taskLists = response.data.value.map((list: any) => new TaskList({}))
+    // const taskLists = response.data.value.map((list: any) => new TaskList({}))
+    const taskLists = response.data.value
     return taskLists
   }
 }

@@ -8,10 +8,10 @@ export interface FolderInterface {
 }
 
 export class Folder implements FolderInterface {
-  constructor(folder: FolderInterface) {
-    this._id = folder.id
-    this._isDefault = folder.isDefault
-    this._name = folder.name
+  constructor(json: FolderInterface) {
+    this._id = json.id
+    this._isDefault = json.isDefault
+    this._name = json.name
   }
 
   private _id: string

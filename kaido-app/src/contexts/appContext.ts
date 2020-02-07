@@ -38,9 +38,15 @@ export const LayoutTextsReducer = (state: State, action: Action): State => {
   }
 }
 
+type LayOutTextsProps = {
+  header: string
+  softKeys: []
+  menus: []
+}
+
 export interface AppContextProps {
   auth: AuthServiceInterface
-  layoutTexts: {}
+  layoutTexts: LayOutTextsProps
   dispatch: (action: Action) => void
 }
 

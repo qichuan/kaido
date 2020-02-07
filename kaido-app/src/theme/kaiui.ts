@@ -82,6 +82,10 @@ export const kaiui = {
       fontSize: 5,
       fontWeight: `body`,
     },
+    sec: {
+      fontSize: 3,
+      fontWeight: `body`,
+    },
     btn: {
       fontSize: 5,
       fontWeight: `body`,

@@ -1,48 +1,93 @@
 import { h } from "preact"
 import { route } from "preact-router"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useState, useContext } from "preact/hooks"
+import { Container } from "theme-ui"
+
 import { useNavKeys } from "../hooks"
+import { AppContext, GraphContext } from "../contexts"
+import { TaskListInterface } from "../../../kaido-core/src/models/taskList"
+import Item from "../components/item"
+import Menu from "../components/menu"
 
 type TaskListProps = {
-  id?: string
+  folderName: string
+  folderId: string
 }
 
-const TaskList: preact.FunctionalComponent<TaskListProps> = ({ id }) => {
-  const [time, setTime] = useState<number>(Date.now())
-  const [count, setCount] = useState<number>(0)
+const TaskList: preact.FunctionalComponent<TaskListProps> = ({ folderName, folderId }) => {
+  const { layoutTexts, dispatch } = useContext(AppContext)
+  const { graph } = useContext(GraphContext)
 
-  useNavKeys({
-    Backspace: () => route(`/taskFolders`),
-  })
+  const { menus } = layoutTexts
+  const [taskLists, setTaskLists] = useState<any | null>(null)
+  const [isMenuOpened, setMenuOpened] = useState(false)
 
-  // gets called when this route is navigated to
+  useNavKeys(
+    {
+      ArrowDown: () => undefined,
+      ArrowUp: () => undefined,
+      SoftLeft: () => setMenuOpened(false),
+      SoftRight: () => setMenuOpened(true),
+      Backspace: () => route(`/folders`),
+    },
+    { capture: true, stopPropagation: true, isMenuOpened }
+  )
+
   useEffect(() => {
-    const timer = window.setInterval(() => setTime(Date.now()), 1000)
-
-    // gets called just before navigating away from the route
-    return () => {
-      clearInterval(timer)
-    }
+    dispatch({
+      type: `SET_HEADER_TEXTS`,
+      layoutTexts: {
+        header: folderName,
+      },
+    })
+    dispatch({
+      type: `SET_SOFTKEY_TEXTS`,
+      layoutTexts: {
+        softKeys: [`Add`, `Select`, `Options`],
+      },
+    })
+    dispatch({
+      type: `SET_MENU_TEXTS`,
+      layoutTexts: {
+        menus: [`Mark as complete`, `Rename list`, `Hide completed tasks`, `Delete list`],
+      },
+    })
   }, [])
 
-  // update the current time
-  const increment = () => {
-    setCount(count + 1)
+  // Get Outlook tasks for selected folder
+  useEffect(() => {
+    ;(async (): Promise<void> => {
+      const lists = await graph.getTaskFolderListsAsync(folderId)
+      setTaskLists(lists)
+    })()
+  }, [])
+
+  const handleMenuSelect = (id: string) => {
+    switch (id) {
+      case `mark-as-complete`:
+        break
+      case `rename-list`:
+        break
+      case `hide-completed-tasks`:
+        break
+      case `delete-list`:
+        break
+      default:
+        break
+    }
+    setMenuOpened(false)
   }
 
   return (
-    <div>
-      <h1>Hi: {id}</h1>
+    <Container>
+      {taskLists &&
+        taskLists.map((list: TaskListInterface) => (
+          <Item type="twoLines" text={list.subject} onSelect={() => route(`/task`)} />
+        ))}
 
-      <div>Current time: {new Date(time).toLocaleString()}</div>
-
-      <p>
-        <button type="button" onClick={increment}>
-          Click Me
-        </button>
-        Clicked {count} times.
-      </p>
-    </div>
+      {/* <div>Current time: {new Date(time).toLocaleString()}</div> */}
+      {isMenuOpened && <Menu menus={menus} onSelect={id => handleMenuSelect(id)} />}
+    </Container>
   )
 }
 
