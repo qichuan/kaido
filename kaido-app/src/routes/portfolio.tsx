@@ -1,29 +1,64 @@
-import { h } from "preact"
-import { useEffect, useRef } from "preact/hooks"
-import { Container, Text } from "theme-ui"
+import { h, Fragment } from "preact"
+import { useEffect, useRef, useState } from "preact/hooks"
+import { Container, Text, Box } from "theme-ui"
 
-import Button from "../components/button"
-import { useNavigation } from "../hooks/useNavigation"
+import Item from "../components/item"
+import { useSoftkey, useNavigation, usePopup } from "../hooks"
 
-const Portfolio: preact.FunctionalComponent = () => {
+const PortfolioPopup = ({ close }) => {
+  useSoftkey(
+    `PortfolioMessage`,
+    {
+      center: `Okay`,
+      onKeyCenter: close,
+    },
+    []
+  )
+
+  return (
+    <Container>
+      <Box>Portfolio Message</Box>
+      <Text>Hello My Portfolio</Text>
+    </Container>
+  )
+}
+
+const Portfolio = () => {
   const containerRef = useRef(null)
-  const [current, setNavigation, getCurrent] = useNavigation(`Search`, containerRef, `y`)
-
-  useEffect(() => {
-    setNavigation(0)
-  }, [])
+  const [showPortfolioPopup] = usePopup(PortfolioPopup)
+  const [current, setNavigation, getCurrent] = useNavigation(`Portfolio`, containerRef, `y`)
 
   const createList = () => {
     const list = []
-    for (let i = 0; i < 10; i += 1)
-      list.push(
-        <Container data-selectable>
-          <Text>This is a content</Text>
-        </Container>
-      )
+    for (let i = 0; i < 10; i += 1) list.push(<Item text="This is content" />)
     return list
   }
-  return <Container ref={containerRef}>{createList()}</Container>
+
+  useSoftkey(
+    `Portfolio`,
+    {
+      left: `Go2`,
+      onKeyLeft: () => setNavigation(2),
+      center: `Select`,
+      onKeyCenter: () => { showPortfolioPopup() },
+      onKeyRight: () => undefined,
+      right: `Options`,
+    },
+    [current.type]
+  )
+
+  useEffect(() => {
+    setNavigation(0)
+    showPortfolioPopup({})
+  }, [])
+
+  return (
+    <Fragment>
+      <Container ref={containerRef} variant="kaiui.list">
+        {createList()}
+      </Container>
+    </Fragment>
+  )
 }
 
 export default Portfolio

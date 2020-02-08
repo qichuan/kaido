@@ -1,15 +1,34 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import { h } from "preact"
-import { memo } from "preact/compat"
 import { useEffect, useRef } from "preact/hooks"
+import { Flex, Heading } from "theme-ui"
+import { SoftkeyInterface } from "../contexts"
 
-const SoftkeyButton = memo(({ className, text, handler }) => (
-  <label className={className} onClick={handler}>
+type SoftkeyButtonProps = {
+  s: {}
+  text: string
+  handler: () => void
+}
+
+const SoftkeyButton: preact.FunctionalComponent<SoftkeyButtonProps> = ({ s, text, handler }) => (
+  <Heading as="h5" sx={s} onClick={handler} variant="kaiui.h5">
     {text}
-  </label>
-))
+  </Heading>
+)
+
+type SoftkeyProps = SoftkeyInterface
+
+type handlerRefProps = {
+  SoftLeft?: () => void
+  Enter?: () => void
+  SoftRight?: () => void
+  ArrowDown?: () => void
+  ArrowUp?: () => void
+  ArrowLeft?: () => void
+  ArrowRight?: () => void
+  4?: () => void
+  5?: () => void
+  6?: () => void
+}
 
 export const Softkey = ({
   left,
@@ -25,8 +44,8 @@ export const Softkey = ({
   onKeyboard4,
   onKeyboard5,
   onKeyboard6,
-}) => {
-  const handlersRef = useRef()
+}: SoftkeyProps) => {
+  const handlersRef = useRef<handlerRefProps | null>(null)
   handlersRef.current = {
     SoftLeft: onKeyLeft,
     Enter: onKeyCenter,
@@ -39,8 +58,12 @@ export const Softkey = ({
     5: onKeyboard5,
     6: onKeyboard6,
   }
-  const onKeyDown = e => {
-    const key = e.key.toString()
+  const onKeyDown = (e: KeyboardEvent) => {
+    let key = e.key.toString()
+    // Simulate the SoftLeft and SoftRight keys on PC
+    if (e.shiftKey && key === `ArrowLeft`) key = `SoftLeft`
+    if (e.shiftKey && key === `ArrowRight`) key = `SoftRight`
+
     if (handlersRef.current[key]) {
       handlersRef.current[key](e)
       e.stopPropagation()
@@ -49,15 +72,20 @@ export const Softkey = ({
   }
 
   useEffect(() => {
-    document.addEventListener(`keydown`, onKeyDown)
-    return () => document.removeEventListener(`keydown`, onKeyDown)
+    document.addEventListener(`keydown`, onKeyDown, true)
+    return () => document.removeEventListener(`keydown`, onKeyDown, true)
   }, [])
 
   return (
-    <div className="softkey">
-      <SoftkeyButton key="left" className="left" text={left} handler={onKeyLeft} />
-      <SoftkeyButton key="center" className="center" text={center} handler={onKeyCenter} />
-      <SoftkeyButton key="right" className="right" text={right} handler={onKeyRight} />
-    </div>
+    <Flex as="footer" id="softkey" variant="kaiui.softkey">
+      <SoftkeyButton key="left" s={{ textAlign: `left` }} text={left} handler={onKeyLeft} />
+      <SoftkeyButton
+        key="center"
+        s={{ width: `7.6rem`, fontWeight: `bold`, textTransform: `uppercase`, textAlign: `center` }}
+        text={center}
+        handler={onKeyCenter}
+      />
+      <SoftkeyButton key="right" s={{ textAlign: `right` }} text={right} handler={onKeyRight} />
+    </Flex>
   )
 }

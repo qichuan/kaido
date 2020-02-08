@@ -7,8 +7,7 @@
     "start": "yarn workspace kaido-app start",
     "build": "yarn workspace kaido-app build",
     "lint": "eslint --ignore-path .gitignore . --ext ts --ext tsx --ext js --ext jsx",
-    "test": "jest ./tests",
-    "precommit": "lint-staged"
+    "test": "jest ./tests"
   },
   "workspaces": [
     "kaido-core",

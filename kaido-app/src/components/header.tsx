@@ -6,7 +6,7 @@ type HeaderProps = {
 }
 
 const Header: preact.FunctionalComponent<HeaderProps> = ({ text }: HeaderProps) => (
-  <Flex variant="kaiui.header">
+  <Flex as="header" variant="kaiui.header">
     <Heading as="h1" variant="kaiui.h1">
       {text}
     </Heading>

@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { h } from "preact"
-import { useContext, useReducer } from "preact/hooks"
+import { useContext, useReducer, useState } from "preact/hooks"
 
 import { Container, Flex, ThemeProvider } from "theme-ui"
 
-import { AppContext } from "../contexts"
+import { AppContext, SoftkeyReducer, SoftkeyContext, PopupContext } from "../contexts"
 import GeneralRoutes from "../routes/general"
 import Login from "../routes/login"
 import Header from "./header"
@@ -12,8 +12,7 @@ import Header from "./header"
 import { Softkey } from "./softkeys"
 import KaiUI from "../theme/kaiui"
 import Portfolio from "../routes/portfolio"
-
-import { SoftKeyReducer, SoftKeyContext } from "../hooks/useSoftKey"
+import { PopupContainer } from "./popup"
 
 if ((module as any).hot) {
   /* eslint-disable global-require */
@@ -26,43 +25,29 @@ const App: preact.FunctionalComponent = () => {
   const userIsLoggedIn = auth.getCurrentUser() != null
   const { header, softKeys } = layoutTexts
 
-  const [state, dispatch] = useReducer(SoftKeyReducer, {})
+  const [state, dispatch] = useReducer(SoftkeyReducer, {})
+  const [popupState, setPopupState] = useState([])
 
   return (
     <ThemeProvider theme={KaiUI}>
-      <SoftKeyContext.Provider value={{ state, dispatch }}>
-        <Flex
-          id="layout"
-          sx={{
-            position: `absolute`,
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            flexDirection: `column`,
-            minHeight: `screenHeight`,
-          }}
-        >
-          <Container as="header">
+      <SoftkeyContext.Provider value={{ state, dispatch }}>
+        <PopupContext.Provider value={{ popupState, setPopupState }}>
+          <Flex id="layout" variant="kaiui.layout">
             <Header text={header} />
-          </Container>
-          <Container
-            as="main"
-            sx={{
-              position: `relative`,
-              overflowX: `hidden`,
-              overflowY: `auto`,
-              flex: `auto`,
-            }}
-          >
-            {userIsLoggedIn ? <GeneralRoutes /> : <Portfolio />}
-          </Container>
-          <Container as="footer">
-            {/* <SoftKey left={softKeys[0]} center={softKeys[1]} right={softKeys[2]} /> */}
+            <Container
+              as="main"
+              sx={{
+                flex: `auto`,
+                position: `relative`,
+              }}
+            >
+              {userIsLoggedIn ? <GeneralRoutes /> : <Portfolio />}
+              <PopupContainer popups={popupState} />
+            </Container>
             <Softkey {...state.current} />
-          </Container>
-        </Flex>
-      </SoftKeyContext.Provider>
+          </Flex>
+        </PopupContext.Provider>
+      </SoftkeyContext.Provider>
     </ThemeProvider>
   )
 }

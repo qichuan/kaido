@@ -91,9 +91,18 @@ export const kaiui = {
       fontWeight: `body`,
     },
   },
+  layout: {
+    ...fullFillArea,
+    position: `absolute`,
+    flexDirection: `column`,
+    minHeight: `screenHeight`,
+  },
   header: {
     alignItems: `center`,
     height: `headerHeight`,
+    minHeight: `headerHeight`,
+    width: `full`,
+    minWidth: `full`,
     backgroundColor: `tertiary`,
     h1: {
       width: `full`,
@@ -106,7 +115,12 @@ export const kaiui = {
     flexDirection: `row`,
     alignItems: `center`,
     justifyContent: `space-between`,
+    flexShrink: 0,
+    whiteSpace: `no-wrap`,
+    width: `full`,
+    minWidth: `full`,
     height: `softKeyHeight`,
+    maxHeight: `softKeyHeight`,
     bg: `gray20`,
     textTransform: `capitalize`,
     p: 2,
@@ -153,6 +167,12 @@ export const kaiui = {
       },
     },
   },
+  list: {
+    ...fullFillArea,
+    position: `absolute`,
+    overflowX: `hidden`,
+    overflowY: `auto`,
+  },
   item: {
     display: `flex`,
     alignItems: `center`,
@@ -160,6 +180,10 @@ export const kaiui = {
     bg: `background`,
     p: 3,
     "&[data-nav-selected='true']": {
+      color: `textInvert`,
+      bg: `primary`,
+    },
+    "&[data-menu-selected='true']": {
       color: `textInvert`,
       bg: `primary`,
     },

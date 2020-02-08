@@ -1,19 +1,31 @@
+import { RefObject } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import { useSoftkey } from "./useSoftKey"
 
-export const useNavigation = (origin, containerRef, axis, elementsSelector = `[data-selectable]`) => {
-  const [current, setCurrent] = useState({ type: null, index: 0, key: null })
+type currentState = {
+  type: string | null
+  index: number
+  key: string | null
+}
 
-  const getAllElements = () => document.querySelectorAll(elementsSelector)
+export const useNavigation = (
+  origin: string,
+  containerRef: RefObject<any>,
+  axis: `x` | `y`,
+  elementsSelector = `nav`
+) => {
+  const [current, setCurrent] = useState<currentState>({ type: null, index: 0, key: null })
 
-  const getSelectedElement = () => document.querySelector(`[nav-selected=true]`)
+  const getAllElements = () => document.querySelectorAll<HTMLElement>(`[data-${elementsSelector}-selectable]`)
+
+  const getSelectedElement = () => document.querySelector<HTMLElement>(`[data-${elementsSelector}-selected=true]`)
 
   const getTheIndexOfTheSelectedElement = () => {
     const element = getSelectedElement()
-    return element ? parseInt(element.getAttribute(`nav-index`), 10) : 0
+    return element ? parseInt(element.getAttribute(`data-${elementsSelector}-index`) as string, 10) : 0
   }
 
-  const setNavigation = index => selectElement(getAllElements()[index] || document.body)
+  const setNavigation = (index: number) => selectElement(getAllElements()[index] || document.body)
 
   const navigatePrevious = () => {
     const allElements = getAllElements()
@@ -31,23 +43,28 @@ export const useNavigation = (origin, containerRef, axis, elementsSelector = `[d
     return selectElement(allElements[setIndex] || allElements[0], setIndex)
   }
 
-  const selectElement = (element, setIndex = 0) => {
+  const selectElement = (element: HTMLElement, setIndex = 0) => {
     if (element) {
-      ;[].forEach.call(getAllElements(), (el, index) => {
+      ;[].forEach.call(getAllElements(), (el: HTMLElement, index) => {
         const selectThisElement = el === element
-        el.setAttribute(`nav-selected`, selectThisElement)
-        el.setAttribute(`nav-index`, index)
+        el.setAttribute(`data-${elementsSelector}-selected`, `${selectThisElement}`)
+        el.setAttribute(`data-${elementsSelector}-index`, `${index}`)
         if (el.nodeName === `INPUT`) {
+          const inputEl = el as HTMLInputElement
           if (selectThisElement) {
-            el.focus()
-            el.selectionStart = el.value.length
-            el.selectionEnd = el.value.length
+            inputEl.focus()
+            inputEl.selectionStart = inputEl.value.length
+            inputEl.selectionEnd = inputEl.value.length
           } else {
-            el.blur()
+            inputEl.blur()
           }
         }
       })
-      setCurrent({ type: element.tagName, index: setIndex, key: element.getAttribute(`data-selected-key`) })
+      setCurrent({
+        type: element.tagName,
+        index: setIndex,
+        key: element.getAttribute(`data-${elementsSelector}-selected-key`),
+      })
     } else {
       setNavigation(0)
     }
@@ -55,11 +72,12 @@ export const useNavigation = (origin, containerRef, axis, elementsSelector = `[d
 
   const getCurrent = () => {
     const element = getSelectedElement()
-    return {
-      type: element.tagName,
-      index: parseInt(element.getAttribute(`nav-index`), 10),
-      key: element.getAttribute(`data-selected-key`),
-    }
+    if (element)
+      return {
+        type: element.tagName,
+        index: parseInt(element.getAttribute(`data-${elementsSelector}-index`) as string, 10),
+        key: element.getAttribute(`data-${elementsSelector}-selected-key`),
+      }
   }
 
   const previousKey = axis === `x` ? `onKeyArrowLeft` : `onKeyArrowUp`
