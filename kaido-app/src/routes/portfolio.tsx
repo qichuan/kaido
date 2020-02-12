@@ -1,38 +1,34 @@
-import { h, Fragment } from "preact"
+import { h, Fragment, createRef } from "preact"
 import { useEffect, useRef, useState } from "preact/hooks"
 import { Container, Text, Box } from "theme-ui"
 
 import Item from "../components/item"
+import Menu from "../components/menu"
 import { useSoftkey, useNavigation, usePopup } from "../hooks"
-
-const PortfolioPopup = ({ close }) => {
-  useSoftkey(
-    `PortfolioMessage`,
-    {
-      center: `Okay`,
-      onKeyCenter: close,
-    },
-    []
-  )
-
-  return (
-    <Container>
-      <Box>Portfolio Message</Box>
-      <Text>Hello My Portfolio</Text>
-    </Container>
-  )
-}
+import List from "../components/list"
 
 const Portfolio = () => {
   const containerRef = useRef(null)
-  const [showPortfolioPopup] = usePopup(PortfolioPopup)
-  const [current, setNavigation, getCurrent] = useNavigation(`Portfolio`, containerRef, `y`)
+  const setRef = useRef(null)
+  const [showOptions] = usePopup(Menu)
+  const [setNavigation, , current] = useNavigation(`Portfolio`, containerRef, `y`)
 
-  const createList = () => {
-    const list = []
-    for (let i = 0; i < 10; i += 1) list.push(<Item text="This is content" />)
-    return list
-  }
+  const lists = []
+  for (let i = 0; i < 10; i += 1) lists.push({ text: `This is content.` })
+
+  const onSearch = () => console.log(`onSearch`)
+
+  const onSettings = () => console.log(`onSettings`)
+
+  const onSync = () => console.log(`onSync`)
+
+  const menus = [
+    { text: `Search`, key: `search`, action: onSearch },
+    { text: `Settings`, key: `settings`, action: onSettings },
+    { text: `Sync`, key: `sync`, action: onSync },
+  ]
+
+  const onKeyCenter = () => undefined
 
   useSoftkey(
     `Portfolio`,
@@ -40,23 +36,20 @@ const Portfolio = () => {
       left: `Go2`,
       onKeyLeft: () => setNavigation(2),
       center: `Select`,
-      onKeyCenter: () => { showPortfolioPopup() },
-      onKeyRight: () => undefined,
+      onKeyCenter,
       right: `Options`,
+      onKeyRight: () => showOptions({ menus, containerRef: setRef }),
     },
     [current.type]
   )
 
   useEffect(() => {
     setNavigation(0)
-    showPortfolioPopup({})
   }, [])
 
   return (
     <Fragment>
-      <Container ref={containerRef} variant="kaiui.list">
-        {createList()}
-      </Container>
+      <List items={lists} containerRef={containerRef} />
     </Fragment>
   )
 }

@@ -26,6 +26,7 @@
     "postinstall-postinstall": "^2.0.0"
   },
   "dependencies": {
+    "emoji-regex": "^8.0.0",
     "kaido-core": "0.1.0",
     "preact": "^10.0.0",
     "preact-jsx-chai": "^3.0.0",

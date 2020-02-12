@@ -6,5 +6,5 @@ export const useHookWithRefCallback = () => {
     // Save a reference to the node
     ref.current = node
   }, [])
-  return [setRef]
+  return [ref, setRef]
 }

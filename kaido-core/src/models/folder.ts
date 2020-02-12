@@ -7,7 +7,7 @@ export interface FolderInterface {
   name: string
 }
 
-export class Folder implements FolderInterface {
+export default class Folder implements FolderInterface {
   constructor(json: FolderInterface) {
     this._id = json.id
     this._isDefault = json.isDefault

@@ -75,6 +75,7 @@ module.exports = {
     "import/no-cycle": 0,
     "space-before-function-paren": 0,
     "import/extensions": 0,
+    "react/jsx-props-no-spreading": 0,
     "react/jsx-one-expression-per-line": 0,
     "react/no-danger": 0,
     "react/display-name": 1,

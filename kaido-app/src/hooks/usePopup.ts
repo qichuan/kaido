@@ -24,10 +24,10 @@ export const usePopup = (component, options = {}) => {
         props: {
           ...props,
           close,
-          closeAll
+          closeAll,
         },
         options,
-        id: Math.random()
+        id: Math.random(),
       }
       if (options.stack) {
         newState.push(newPopup)

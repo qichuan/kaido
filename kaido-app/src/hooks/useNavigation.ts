@@ -107,5 +107,5 @@ export const useNavigation = (
     }
   })
 
-  return [current, setNavigation, getCurrent]
+  return [setNavigation, getCurrent, current]
 }

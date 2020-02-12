@@ -23,10 +23,17 @@ const commonButtonStyles = {
 }
 
 const fullFillArea = {
+  position: `absolute`,
   top: 0,
   bottom: 0,
   left: 0,
   right: 0,
+}
+
+const textEllipsis = {
+  overflow: `hidden`,
+  textOverflow: `ellipsis`,
+  wordWrap: `break-word`,
 }
 
 export const colors = {
@@ -53,7 +60,7 @@ export const sizes = {
   full: `100%`,
   headerHeight: `2.8rem`,
   softKeyHeight: `3rem`,
-  buttonHeight: `3.6rem`,
+  inputHeight: `3.6rem`,
   itemHeight: `6rem`,
   menuItemHeight: `4.8rem`,
   separatorHeight: `2rem`,
@@ -79,10 +86,13 @@ export const kaiui = {
   },
   p: {
     pri: {
+      ...textEllipsis,
       fontSize: 5,
       fontWeight: `body`,
+      lineHeight: 1.3,
     },
     sec: {
+      ...textEllipsis,
       fontSize: 3,
       fontWeight: `body`,
     },
@@ -93,7 +103,6 @@ export const kaiui = {
   },
   layout: {
     ...fullFillArea,
-    position: `absolute`,
     flexDirection: `column`,
     minHeight: `screenHeight`,
   },
@@ -109,6 +118,22 @@ export const kaiui = {
       color: `textInvert`,
       px: 3,
       textAlign: `center`,
+    },
+  },
+  popup: {
+    position: `absolute`,
+    height: `full`,
+    minHeight: `full`,
+    zIndex: 50,
+    content: {
+      position: `absolute`,
+      bottom: 0,
+      bg: `background`,
+    },
+    shader: {
+      ...fullFillArea,
+      bg: `black`,
+      opacity: 0.8,
     },
   },
   softkey: {
@@ -129,34 +154,15 @@ export const kaiui = {
       overflow: `hidden`,
     },
   },
-  menu: {
-    ...fullFillArea,
-    position: `fixed`,
-    mb: sizes.softKeyHeight,
-    options: {
-      width: `full`,
-      position: `absolute`,
-      flexDirection: `column`,
-      bottom: 0,
-      zIndex: 50,
-      bg: `background`,
-    },
-    overlay: {
-      ...fullFillArea,
-      position: `absolute`,
-      bg: `black`,
-      zIndex: 40,
-      opacity: 0.8,
-    },
-  },
-  buttons: {
+  button: {
     primary: {
       ...commonButtonStyles,
       display: `flex`,
       flexDirection: `row`,
       alignItems: `center`,
       justifyContent: `center`,
-      height: `buttonHeight`,
+      height: `inputHeight`,
+      maxHeight: `inputHeight`,
       width: `full`,
       lineHeight: `inherit`,
       color: `text`,
@@ -167,9 +173,16 @@ export const kaiui = {
       },
     },
   },
+  input: {
+    fontSize: 5,
+    height: `inputHeight`,
+    maxHeight: `inputHeight`,
+    bg: `background`,
+    borderRadius: 0,
+  },
   list: {
     ...fullFillArea,
-    position: `absolute`,
+    zIndex: 40,
     overflowX: `hidden`,
     overflowY: `auto`,
   },
@@ -178,7 +191,7 @@ export const kaiui = {
     alignItems: `center`,
     height: `itemHeight`,
     bg: `background`,
-    p: 3,
+    p: 2,
     "&[data-nav-selected='true']": {
       color: `textInvert`,
       bg: `primary`,

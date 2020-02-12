@@ -3,35 +3,99 @@ import { useContext, useEffect, useState, useRef } from "preact/hooks"
 import { route } from "preact-router"
 import { Container } from "theme-ui"
 
+import emojiRegex from "emoji-regex"
+
 import { FolderInterface } from "../../../kaido-core/src/models/folder"
 import { AppContext, GraphContext } from "../contexts"
-
-import { useNavKeys } from "../hooks/useNavKeys"
-import Menu from "../components/menu"
+import { useSoftkey, useNavigation, usePopup } from "../hooks"
 import Item from "../components/item"
 import Separator from "../components/separator"
+import Menu from "../components/menu"
+import Input from "../components/input"
+import Loading from "../components/loading"
+import Dialog from "../components/dialog"
+import { IconMyDay, IconMyFolder, IconCustomFolder } from "../components/icons"
 
 const Folders: preact.FunctionalComponent = () => {
-  const { auth, layoutTexts, dispatch } = useContext(AppContext)
+  const containerRef = useRef(null)
+  const menuRef = useRef<HTMLDivElement>(null!)
+  const inputRef = useRef<HTMLDivElement>(null!)
+
+  const { auth, dispatch } = useContext(AppContext)
   const { graph } = useContext(GraphContext)
 
-  const { menus } = layoutTexts
+  const [showMenu] = usePopup(Menu)
+  const [showInput] = usePopup(Input)
+  const [showDialog] = usePopup(Dialog)
+
+  const [setNavigation, getCurrent, current] = useNavigation(`Folders`, containerRef, `y`)
+
   const [taskFolders, setTaskFolders] = useState<any | null>(null)
-  const [isMenuOpened, setMenuOpened] = useState(false)
+  const [refresh, setRefresh] = useState(false)
 
   const user = auth.getCurrentUser()
   const fullname = user ? `${user.fullname}'s` : `My`
 
-  useNavKeys(
+  const regex = emojiRegex()
+
+  const onCreateFolder = async (name: string) => {
+    await graph.createTaskFolderAsync(name)
+
+    setRefresh(!refresh)
+  }
+
+  const onSearch = () => {
+    showDialog({ title: `Oops...`, content: `Search feature is working in progress...` })
+  }
+
+  const onSettings = () => {
+    showDialog({ title: `Oops...`, content: `Settings feature is working in progress...` })
+  }
+
+  const onSignOut = () => auth.logout()
+
+  const menus = [
+    { text: `Search`, key: `search`, action: onSearch, confirm: true },
+    { text: `Settings`, key: `settings`, action: onSettings, confirm: true },
+    { text: `Sign out`, key: `sign-out`, action: onSignOut },
+  ]
+
+  const onKeyCenter = () => {
+    const { index } = getCurrent()
+
+    // Skip "My Day" section
+    if (index > 0) {
+      const folder = taskFolders[index - 1]
+      route(`/taskFolders/${folder.name}/${folder.id}/tasks`)
+    }
+  }
+
+  useSoftkey(
+    `Folders`,
     {
-      ArrowDown: () => undefined,
-      ArrowUp: () => undefined,
-      SoftLeft: () => setMenuOpened(false),
-      SoftRight: () => setMenuOpened(true),
-      Backspace: () => setMenuOpened(false),
+      left: `New`,
+      onKeyLeft: () =>
+        showInput({
+          label: `Add new list`,
+          placeholder: `List name here...`,
+          action: onCreateFolder,
+          containerRef: inputRef,
+        }),
+      center: `Select`,
+      onKeyCenter,
+      right: `Options`,
+      onKeyRight: () => showMenu({ menus, containerRef: menuRef }),
     },
-    { capture: true, stopPropagation: true, isMenuOpened }
+    [current]
   )
+
+  // Get Outlook task folders
+  useEffect(() => {
+    ;(async (): Promise<void> => {
+      const foldersResponse = await graph.getTaskFoldersAsync()
+      setTaskFolders(foldersResponse)
+    })()
+  }, [refresh])
 
   useEffect(() => {
     dispatch({
@@ -40,62 +104,41 @@ const Folders: preact.FunctionalComponent = () => {
         header: `${fullname} To Do Lists`,
       },
     })
-    dispatch({
-      type: `SET_SOFTKEY_TEXTS`,
-      layoutTexts: {
-        softKeys: [`Add`, `Select`, `Options`],
-      },
-    })
-    dispatch({
-      type: `SET_MENU_TEXTS`,
-      layoutTexts: {
-        menus: [`Search`, `Settings`, `Sign out`],
-      },
-    })
+
+    setNavigation(0)
   }, [])
 
-  // Get Outlook task folders
-  useEffect(() => {
-    ;(async (): Promise<void> => {
-      const folders = await graph.getTaskFoldersAsync()
-      setTaskFolders(folders)
-    })()
-  }, [])
-
-  const handleMenuSelect = (id: string) => {
-    switch (id) {
-      case `search`:
-        break
-      case `settings`:
-        break
-      case `sign-out`:
-        auth.logout()
-        break
-      default:
-        break
-    }
-    setMenuOpened(false)
-  }
-
-  return (
-    <Container>
-      <Item text="My Day" />
-      {taskFolders &&
-        taskFolders.map((folder: FolderInterface) => {
-          const item = (
-            <Item text={folder.name} onSelect={() => route(`/taskFolders/${folder.name}/${folder.id}/tasks`)} />
-          )
-          return folder.isDefault ? (
+  return taskFolders ? (
+    <Container ref={containerRef} variant="kaiui.list">
+      <Item text="My Day">
+        <IconMyDay />
+      </Item>
+      {taskFolders.map((folder: FolderInterface) => {
+        if (folder.isDefault) {
+          return (
             <Fragment>
-              {item}
+              <Item text={folder.name}>
+                <IconMyFolder />
+              </Item>
               <Separator text="My Lists" />
             </Fragment>
-          ) : (
-            item
           )
-        })}
-      {isMenuOpened && <Menu menus={menus} onSelect={id => handleMenuSelect(id)} />}
+        }
+
+        // use emoji-regex to detect if folder starts with an emoji
+        if (!regex.test([...folder.name][0])) {
+          return (
+            <Item text={folder.name}>
+              <IconCustomFolder />
+            </Item>
+          )
+        }
+
+        return <Item text={folder.name} />
+      })}
     </Container>
+  ) : (
+    <Loading />
   )
 }
 

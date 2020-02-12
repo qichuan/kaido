@@ -1,22 +1,23 @@
 import { h } from "preact"
+import { Box, Container } from "theme-ui"
 
 export const Popup = ({ component, props, options, style }) => {
   if (component) {
-    let contentClasses = 'popup-content'
-    if (options && options.mode === 'fullscreen') {
-      contentClasses += ' fullscreen'
+    let contentClasses = `popup-content`
+    if (options && options.mode === `fullscreen`) {
+      contentClasses += ` fullscreen`
     }
     return (
-      <div class={contentClasses} style={style}>
-        { h(component, props) }
-      </div>
+      <Box className={contentClasses} sx={style}>
+        {h(component, props)}
+      </Box>
     )
   }
 }
 
 export const PopupContainer = ({ popups }) => {
   if (popups.length === 0) {
-    return ''
+    return ``
   }
   let zIndex = 100
   const nextZIndex = () => {
@@ -26,11 +27,13 @@ export const PopupContainer = ({ popups }) => {
   // The shader is just before the last popup
   const shaderZIndex = 100 + popups.length * 2 - 1
   return (
-    <div class='popup'>
-      <div class='shader' style={{ zIndex: shaderZIndex }} />
-      { popups.map(popup => {
-        return <Popup {...popup} key={popup.id} style={{ zIndex: nextZIndex() }} />
-      }) }
-    </div>
+    <Container id="popup" variant="kaiui.popup">
+      <Container variant="kaiui.popup.content" sx={{ zIndex: shaderZIndex + 1 }}>
+        {popups.map(popup => {
+          return <Popup {...popup} key={popup.id} style={{ zIndex: nextZIndex() }} />
+        })}
+      </Container>
+      <Box id="popup-shader" variant="kaiui.popup.shader" sx={{ zIndex: shaderZIndex }} />
+    </Container>
   )
 }

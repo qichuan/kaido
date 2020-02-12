@@ -1,36 +1,31 @@
 import { h } from "preact"
-import { useContext, useRef, useEffect } from "preact/hooks"
+import { useEffect, useRef, useContext } from "preact/hooks"
 import { Container } from "theme-ui"
 
+import { useSoftkey, useNavigation } from "../hooks"
 import { AppContext } from "../contexts"
 import Button from "../components/button"
-import { useNavKeys } from "../hooks"
 
-const Login: preact.FunctionalComponent = () => {
+
+const Login = () => {
+  const containerRef = useRef(null)
   const { auth } = useContext(AppContext)
+  const [setNavigation, getCurrent, current] = useNavigation(`Login`, containerRef, `y`)
 
-  useNavKeys({
-    ArrowDown: () => undefined,
-    ArrowUp: () => undefined,
+  const onKeyCenter = () => undefined
+
+  useSoftkey(`Login`, {
+    center: `Select`,
+    onKeyCenter: () => auth.login(),
   })
 
+  useEffect(() => setNavigation(0), [])
+
   return (
-    <Container>
-      <Button
-        text="Sign in"
-        name="signin"
-        onClick={() => {
-          auth.login()
-        }}
-      />
-      <Button
-        text="Sign out"
-        name="signout"
-        onClick={() => {
-          auth.logout()
-        }}
-      />
-      <Button text="Hello" name="hello" onClick={() => undefined} />
+    <Container ref={containerRef}>
+      <Button text="Sign in" name="signin" />
+      <Button text="Sign out" name="signout" />
+      <Button text="Hello" name="hello" />
     </Container>
   )
 }

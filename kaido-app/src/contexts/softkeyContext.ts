@@ -11,6 +11,7 @@ export interface SoftkeyInterface {
   onKeyArrowUp?: () => void
   onKeyArrowLeft?: () => void
   onKeyArrowRight?: () => void
+  onKeyBackspace?: () => void
   onKeyboard4?: () => void
   onKeyboard5?: () => void
   onKeyboard6?: () => void

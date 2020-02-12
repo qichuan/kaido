@@ -1,24 +1,45 @@
 import { h } from "preact"
-import { Container, Text } from "theme-ui"
+import { Box, Text, Flex } from "theme-ui"
+import Checkbox from "./checkbox"
 
 type ItemProps = {
   type?: `singleLine` | `twoLines`
+  checkbox?: `checkbox` | `star` | null
+  checked?: boolean
   text: string
   subText?: string
-  onSelect: () => void
+  strike?: boolean
+  children?: JSX.Element
 }
 
-const Item: preact.FunctionalComponent<ItemProps> = ({ type = `singleLine`, text, subText, onSelect }) => (
-  <Container onClick={onSelect} data-nav-selectable variant="kaiui.item">
-    <Text as="p" variant="kaiui.p.pri">
-      {text}
-    </Text>
-    {type === `twoLines` && (
-      <Text as="p" variant="kaiui.p.sec">
-        {subText}
-      </Text>
-    )}
-  </Container>
-)
+const Item: preact.FunctionalComponent<ItemProps> = ({
+  type = `singleLine`,
+  checkbox = null,
+  checked = false,
+  text,
+  subText,
+  strike,
+  children,
+}) => {
+  const asTag = strike ? `s` : `p`
+  // Line height for p.pri multiples 1.3, so single width is 1.7rem * 1.3 = 2.21rem
+  const maxLineHeight = type === `singleLine` ? `4.4rem` : `2.2rem`
+  return (
+    <Flex data-nav-selectable variant="kaiui.item">
+      {children}
+      <Box sx={{ flex: `auto` }}>
+        <Flex as={asTag} variant="kaiui.p.pri" sx={{ maxHeight: maxLineHeight }}>
+          {text}
+        </Flex>
+        {type === `twoLines` && (
+          <Text as="p" variant="kaiui.p.sec">
+            {subText}
+          </Text>
+        )}
+      </Box>
+      {checkbox && <Checkbox theme={checkbox} isChecked={checked} />}
+    </Flex>
+  )
+}
 
 export default Item
