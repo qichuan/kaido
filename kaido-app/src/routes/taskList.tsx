@@ -76,7 +76,9 @@ const TaskList = ({ folderName, folderId }: TaskListProps) => {
     }
   }
 
-  const onHideCompleted = () => setHideCompleted(!hideCompleted)
+  const onHideCompleted = () => {
+    setHideCompleted(!hideCompleted)
+  }
 
   const onRenameList = () => {
     showDialog({ title: `Oops...`, content: `Rename list feature is working in progress...` })

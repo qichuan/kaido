@@ -75,8 +75,8 @@ export const Softkey = ({
   }
 
   useEffect(() => {
-    document.addEventListener(`keydown`, onKeyDown, true)
-    return () => document.removeEventListener(`keydown`, onKeyDown, true)
+    document.addEventListener(`keydown`, onKeyDown)
+    return () => document.removeEventListener(`keydown`, onKeyDown)
   }, [])
 
   return (

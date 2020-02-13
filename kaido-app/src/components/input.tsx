@@ -1,4 +1,4 @@
-import { h, RefObject, Ref } from "preact"
+import { h, RefObject } from "preact"
 import { useEffect, useRef } from "preact/hooks"
 import { Container, Label, Input as UIInput, useThemeUI } from "theme-ui"
 
@@ -64,4 +64,5 @@ const Input = ({ label, placeholder, action, containerRef, close }: InputProps) 
     </Container>
   )
 }
+
 export default Input

@@ -1,6 +1,6 @@
 import { h, RefObject } from "preact"
 import { useEffect } from "preact/hooks"
-import { Box, Heading, Container, Text } from "theme-ui"
+import { Container, Text } from "theme-ui"
 
 import { useSoftkey, useNavigation } from "../hooks"
 import Title from "./title"

@@ -8,12 +8,14 @@ type currentState = {
   key: string | null
 }
 
+type useNavigationReturnProps = [(index: number) => void, () => currentState, currentState]
+
 export const useNavigation = (
   origin: string,
   containerRef: RefObject<any>,
   axis: `x` | `y`,
   elementsSelector = `nav`
-) => {
+): useNavigationReturnProps => {
   const [current, setCurrent] = useState<currentState>({ type: null, index: 0, key: null })
 
   const getAllElements = () => document.querySelectorAll<HTMLElement>(`[data-${elementsSelector}-selectable]`)
@@ -70,14 +72,13 @@ export const useNavigation = (
     }
   }
 
-  const getCurrent = () => {
-    const element = getSelectedElement()
-    if (element)
-      return {
-        type: element.tagName,
-        index: parseInt(element.getAttribute(`data-${elementsSelector}-index`) as string, 10),
-        key: element.getAttribute(`data-${elementsSelector}-selected-key`),
-      }
+  const getCurrent = (): currentState => {
+    const element = getSelectedElement() as HTMLElement
+    return {
+      type: element.tagName,
+      index: parseInt(element.getAttribute(`data-${elementsSelector}-index`) as string, 10),
+      key: element.getAttribute(`data-${elementsSelector}-selected-key`),
+    }
   }
 
   const previousKey = axis === `x` ? `onKeyArrowLeft` : `onKeyArrowUp`

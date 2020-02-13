@@ -1,6 +1,9 @@
 import { h } from "preact"
 import { Box, Container } from "theme-ui"
 
+type PopupProps = {
+  
+}
 export const Popup = ({ component, props, options, style }) => {
   if (component) {
     let contentClasses = `popup-content`
@@ -15,7 +18,8 @@ export const Popup = ({ component, props, options, style }) => {
   }
 }
 
-export const PopupContainer = ({ popups }) => {
+type PopupContainerProps = { popups: [] }
+export const PopupContainer = ({ popups }: PopupContainerProps) => {
   if (popups.length === 0) {
     return ``
   }
@@ -29,9 +33,9 @@ export const PopupContainer = ({ popups }) => {
   return (
     <Container id="popup" variant="kaiui.popup">
       <Container variant="kaiui.popup.content" sx={{ zIndex: shaderZIndex + 1 }}>
-        {popups.map(popup => {
-          return <Popup {...popup} key={popup.id} style={{ zIndex: nextZIndex() }} />
-        })}
+        {popups.map((popup: any) => (
+          <Popup {...popup} key={popup.id} style={{ zIndex: nextZIndex() }} />
+        ))}
       </Container>
       <Box id="popup-shader" variant="kaiui.popup.shader" sx={{ zIndex: shaderZIndex }} />
     </Container>

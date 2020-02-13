@@ -1,7 +1,8 @@
+// import { h } from "preact"
 import { useContext } from "preact/hooks"
 import { PopupContext } from "../contexts"
 
-export const usePopup = (component, options = {}) => {
+export const usePopup = (component: (props: any) => JSX.Element, options = { stack: false }) => {
   const { setPopupState } = useContext(PopupContext)
 
   const close = () => {
@@ -16,7 +17,7 @@ export const usePopup = (component, options = {}) => {
     setPopupState([])
   }
 
-  const show = props => {
+  const show = (props: any) => {
     setPopupState(oldState => {
       let newState = [...oldState]
       const newPopup = {

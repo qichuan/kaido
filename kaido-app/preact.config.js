@@ -1,5 +1,4 @@
 import { resolve } from "path"
-import webpack from "webpack"
 
 export default function(config, env, helpers) {
   /**
@@ -17,12 +16,11 @@ export default function(config, env, helpers) {
     })
   })
 
-  // Remove moment.js locale dependencies
-  // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack#using-ignoreplugin
-  config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
-
   // Use any `index` file, not just index.js
   config.resolve.alias[`preact-cli-entrypoint`] = resolve(process.cwd(), `src`, `index`)
+
+  // Force webpack to use moment.js directly to avoid cannot find './locale' warnings
+  config.resolve.alias.moment$ = resolve(__dirname, `../`, `node_modules/moment/moment.js`)
 
   if (env.production) {
     config.devtool = false // disable sourcemaps

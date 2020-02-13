@@ -18,7 +18,7 @@ const dateToFromNowDaily = (myDate: string) => {
   const fromNow = moment(myDate).fromNow()
 
   // ensure the date is displayed with today and yesterday
-  return moment(myDate).calendar(null, {
+  return moment(myDate).calendar(undefined, {
     // when the date is closer, specify custom values
     lastWeek: `[Last] dddd`,
     lastDay: `[Yesterday]`,
@@ -42,8 +42,6 @@ const TaskDetails = ({ task }: any) => {
     createdDateTime,
     body,
   } = task
-
-  console.log(createdDateTime)
 
   const dueDate = dueDateTime ? `Due ${dateToFromNowDaily(dueDateTime.dateTime)}` : `Due date`
   const reminder = reminderDateTime ? `Remind me at ${dateToFromNowDaily(reminderDateTime.dateTime)}` : `Remind me`

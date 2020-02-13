@@ -9,7 +9,7 @@ import Button from "../components/button"
 const Login = () => {
   const containerRef = useRef(null)
   const { auth } = useContext(AppContext)
-  const [setNavigation, getCurrent, current] = useNavigation(`Login`, containerRef, `y`)
+  const [setNavigation] = useNavigation(`Login`, containerRef, `y`)
 
   useSoftkey(`Login`, {
     center: `Select`,

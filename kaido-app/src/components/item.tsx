@@ -12,7 +12,7 @@ type ItemProps = {
   children?: JSX.Element
 }
 
-const Item: preact.FunctionalComponent<ItemProps> = ({
+const Item = ({
   type = `singleLine`,
   checkbox = null,
   checked = false,
@@ -20,7 +20,7 @@ const Item: preact.FunctionalComponent<ItemProps> = ({
   subText,
   strike,
   children,
-}) => {
+}: ItemProps) => {
   const asTag = strike ? `s` : `p`
   // Line height for p.pri multiples 1.3, so single width is 1.7rem * 1.3 = 2.21rem
   const maxLineHeight = type === `singleLine` ? `4.4rem` : `2.2rem`

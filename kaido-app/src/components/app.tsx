@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useContext, useReducer, useState } from "preact/hooks"
 import { Container, Flex, ThemeProvider } from "theme-ui"
 
-import { AppContext, SoftkeyReducer, SoftkeyContext, PopupContext } from "../contexts"
+import { AppContext, SoftkeyReducer, SoftkeyContext, PopupContext, PopupContextProps } from "../contexts"
 import GeneralRoutes from "../routes/general"
 import Login from "../routes/login"
 import Header from "./header"
@@ -17,7 +17,7 @@ const App: preact.FunctionalComponent = () => {
   const { header } = layoutTexts
 
   const [state, dispatch] = useReducer(SoftkeyReducer, {})
-  const [popupState, setPopupState] = useState([])
+  const [popupState, setPopupState] = useState([] as any)
 
   return (
     <ThemeProvider theme={KaiUI}>
