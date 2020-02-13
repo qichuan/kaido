@@ -19,8 +19,8 @@ const Login = () => {
   useEffect(() => setNavigation(0), [])
 
   return (
-    <Container ref={containerRef}>
-      <Heading as="h1" variant="kaiui.h1" sx={{ p: 3 }}>
+    <Container ref={containerRef} variant="kaiui.list">
+      <Heading variant="kaiui.h2" sx={{ p: 3 }}>
         Login with your Microsoft account.
       </Heading>
       <Box sx={{ p: 2, textAlign: `center` }}>

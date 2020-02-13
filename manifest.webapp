@@ -4,12 +4,12 @@
   "version": "0.1.0",
   "launch_path": "/index.html",
   "icons": {
-    "256": "/assets/icons/icon-256.png",
-    "128": "/assets/icons/icon-128.png",
-    "64": "/assets/icons/icon-64.png",
-    "48": "/assets/icons/icon-48.png",
-    "32": "/assets/icons/icon-32.png",
-    "24": "/assets/icons/icon-24.png"
+    "256": "/assets/icons/kaido-256.png",
+    "128": "/assets/icons/kaido-128.png",
+    "64": "/assets/icons/kaido-64.png",
+    "48": "/assets/icons/kaido-48.png",
+    "32": "/assets/icons/kaido-32.png",
+    "24": "/assets/icons/kaido-24.png"
   },
   "developer": {
     "name": "Liki Du",
