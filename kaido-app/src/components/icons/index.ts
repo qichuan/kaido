@@ -1,3 +1,6 @@
 export * from "./iconMyDay"
 export * from "./iconMyFolder"
 export * from "./iconCustomFolder"
+export * from "./iconDueDate"
+export * from "./iconReminder"
+export * from "./iconRepeat"

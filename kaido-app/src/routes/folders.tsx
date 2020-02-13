@@ -88,6 +88,14 @@ const Folders: preact.FunctionalComponent = () => {
     },
     [current]
   )
+  useEffect(() => {
+    dispatch({
+      type: `SET_HEADER_TEXTS`,
+      layoutTexts: {
+        header: `${fullname} To Do Lists`,
+      },
+    })
+  }, [])
 
   // Get Outlook task folders
   useEffect(() => {
@@ -97,16 +105,7 @@ const Folders: preact.FunctionalComponent = () => {
     })()
   }, [refresh])
 
-  useEffect(() => {
-    dispatch({
-      type: `SET_HEADER_TEXTS`,
-      layoutTexts: {
-        header: `${fullname} To Do Lists`,
-      },
-    })
-
-    setNavigation(0)
-  }, [])
+  useEffect(() => setNavigation(1), [taskFolders])
 
   return taskFolders ? (
     <Container ref={containerRef} variant="kaiui.list">

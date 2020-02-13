@@ -117,6 +117,15 @@ const TaskList = ({ folderName, folderId }: TaskListProps) => {
     [current]
   )
 
+  useEffect(() => {
+    dispatch({
+      type: `SET_HEADER_TEXTS`,
+      layoutTexts: {
+        header: folderName,
+      },
+    })
+  }, [])
+
   // Get Outlook tasks for selected folder
   useEffect(() => {
     ;(async (): Promise<void> => {
@@ -125,16 +134,7 @@ const TaskList = ({ folderName, folderId }: TaskListProps) => {
     })()
   }, [refresh])
 
-  useEffect(() => {
-    dispatch({
-      type: `SET_HEADER_TEXTS`,
-      layoutTexts: {
-        header: folderName,
-      },
-    })
-
-    setNavigation(0)
-  }, [])
+  useEffect(() => setNavigation(0), [taskLists])
 
   return taskLists ? (
     <Container ref={containerRef} variant="kaiui.list">

@@ -105,7 +105,7 @@ export const useNavigation = (
       // scroll up
       containerRef.current.scrollTop -= containerRect.top - rect.top
     }
-  })
+  }, [current])
 
   return [setNavigation, getCurrent, current]
 }

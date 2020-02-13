@@ -62,6 +62,7 @@ export const sizes = {
   softKeyHeight: `3rem`,
   inputHeight: `3.6rem`,
   itemHeight: `6rem`,
+  itemSubHeight: `3.6rem`,
   menuItemHeight: `4.8rem`,
   separatorHeight: `2rem`,
   screenHeight: `100vh`,
@@ -95,6 +96,7 @@ export const kaiui = {
       ...textEllipsis,
       fontSize: 3,
       fontWeight: `body`,
+      lineHeight: 1.2,
     },
     btn: {
       fontSize: 5,

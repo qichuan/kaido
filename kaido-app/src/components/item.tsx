@@ -28,9 +28,9 @@ const Item: preact.FunctionalComponent<ItemProps> = ({
     <Flex data-nav-selectable variant="kaiui.item">
       {children}
       <Box sx={{ flex: `auto` }}>
-        <Flex as={asTag} variant="kaiui.p.pri" sx={{ maxHeight: maxLineHeight }}>
+        <Text as={asTag} variant="kaiui.p.pri" sx={{ maxHeight: maxLineHeight }}>
           {text}
-        </Flex>
+        </Text>
         {type === `twoLines` && (
           <Text as="p" variant="kaiui.p.sec">
             {subText}
